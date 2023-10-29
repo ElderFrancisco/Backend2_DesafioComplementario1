@@ -22,4 +22,13 @@ module.exports = (app) => {
       res.status(500).json({ error: 'Error al obtener los productos' });
     }
   });
+
+  app.get('/chat', async (req, res) => {
+    try {
+      res.render('chat');
+    } catch (error) {
+      console.log(`[ERROR] -> ${error}`);
+      res.status(500).json({ error: 'Error al obtener los mensajes' });
+    }
+  });
 };

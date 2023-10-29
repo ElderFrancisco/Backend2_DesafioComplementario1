@@ -43,9 +43,14 @@ module.exports = (app) => {
   });
 
   router.post('/:cid/product/:pid', async (req, res) => {
-    const cid = req.params.cid;
-    const pid = parseInt(req.params.pid);
-    const updatedCart = await cartController.updateCart(cid, pid);
-    res.send(updatedCart);
+    try {
+      const cid = req.params.cid;
+      const pid = parseInt(req.params.pid);
+      const updatedCart = await cartController.updateCart(cid, pid);
+      res.send(updatedCart);
+    } catch {
+      console.log(error);
+      res.status(500).send(error);
+    }
   });
 };

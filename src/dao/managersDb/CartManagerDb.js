@@ -52,40 +52,29 @@ class CartManager {
       return null;
     }
   }
-  updateCart(cid, pid) {
+  async updateCart(cid, pid) {
     try {
-      const selectedCartIndex = this.carts.findIndex((cart) => cart.id === cid);
-      console.log(selectedCartIndex);
-      if (selectedCartIndex === -1) {
-        return res
-          .status(404)
-          .send(`No se encontró ningún carrito con el ID proporcionado.`);
-      }
-      const selectedCart = this.carts[selectedCartIndex];
-      console.log(selectedCart);
+      const cartToUpdate = await cartModel.findById(cid).lean();
 
-      const selectedProduct = selectedCart.products.find(
-        (cart) => cart.id === pid,
-      );
-      console.log(selectedProduct);
-      if (selectedProduct) {
-        selectedProduct.quantity += 1;
+      if (!cartToUpdate) {
+        return res.status(401).send('no se encontro el carrito');
+      }
+      console.log(cartToUpdate);
+
+      if (cartToUpdate.products) {
+        const pr = cartToUpdate.products;
+        console.log('2222 ' + pr);
       } else {
-        selectedCart.products.push({ id: pid, quantity: 1 });
+        const pr = cartToUpdate.products;
+        console.log('no');
       }
 
-      this.carts[selectedCartIndex] = selectedCart;
+      await cartModel.findByIdAndUpdate(cid, updatedProduct);
 
-      fs.writeFile(this.path, JSON.stringify(this.carts, null, 2), (error) => {
-        if (error) {
-          console.log('Error al guardar los cambios en el archivo');
-        } else {
-          console.log('El producto fue actualizado correctamente');
-        }
-      });
-      return selectedCart;
+      return cartToUpdate;
     } catch (error) {
       console.log(error);
+      return error;
     }
   }
 }
