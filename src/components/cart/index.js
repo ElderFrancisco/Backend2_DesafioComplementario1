@@ -45,7 +45,7 @@ module.exports = (app) => {
   router.post('/:cid/product/:pid', async (req, res) => {
     try {
       const cid = req.params.cid;
-      const pid = parseInt(req.params.pid);
+      const pid = req.params.pid;
       const updatedCart = await cartController.updateCart(cid, pid);
       res.send(updatedCart);
     } catch {

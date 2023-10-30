@@ -1,6 +1,6 @@
 const cartModel = require('../models/carts.model.js');
 
-class CartManager {
+class CartManagerDb {
   constructor() {}
 
   async createNewCart(body) {
@@ -54,24 +54,25 @@ class CartManager {
   }
   async updateCart(cid, pid) {
     try {
-      const cartToUpdate = await cartModel.findById(cid).lean();
+      const cartToUpdate = await cartModel.findById(cid);
 
       if (!cartToUpdate) {
         return res.status(401).send('no se encontro el carrito');
       }
-      console.log(cartToUpdate);
 
-      if (cartToUpdate.products) {
-        const pr = cartToUpdate.products;
-        console.log('2222 ' + pr);
+      const indexProdcut = cartToUpdate.products.findIndex((product) => {
+        console.log(product);
+        return product.product == pid;
+      });
+      console.log(indexProdcut);
+      if (indexProdcut >= 0) {
+        cartToUpdate.products[indexProdcut].quantity++;
       } else {
-        const pr = cartToUpdate.products;
-        console.log('no');
+        cartToUpdate.products.push({ product: pid, quantity: 1 });
       }
+      const result = await cartModel.updateOne({ _id: cid }, cartToUpdate);
 
-      await cartModel.findByIdAndUpdate(cid, updatedProduct);
-
-      return cartToUpdate;
+      return result;
     } catch (error) {
       console.log(error);
       return error;
@@ -79,4 +80,4 @@ class CartManager {
   }
 }
 
-module.exports = CartManager;
+module.exports = CartManagerDb;
