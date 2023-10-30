@@ -60,13 +60,12 @@ class CartManagerDb {
         return res.status(401).send('no se encontro el carrito');
       }
 
-      const indexProdcut = cartToUpdate.products.findIndex((product) => {
-        console.log(product);
+      const indexProduct = cartToUpdate.products.findIndex((product) => {
         return product.product == pid;
       });
-      console.log(indexProdcut);
-      if (indexProdcut >= 0) {
-        cartToUpdate.products[indexProdcut].quantity++;
+      console.log(indexProduct);
+      if (indexProduct >= 0) {
+        cartToUpdate.products[indexProduct].quantity++;
       } else {
         cartToUpdate.products.push({ product: pid, quantity: 1 });
       }
